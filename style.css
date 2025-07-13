@@ -1,0 +1,72 @@
+/* Default for computer */
+body {
+    margin: 10%;
+    text-align: center;
+}
+
+.canvas {
+    width: 120px;
+    height: 120px;
+    background-color: aliceblue;
+    border: solid black;
+}
+
+table {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#currentplayer {
+    padding-bottom: 15px;
+}
+
+input {
+    width: 100px;
+    height: 50px;
+    border-radius: 7px;
+    font-size: larger;
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+    body {
+        margin: 5%;
+    }
+
+    .canvas {
+        width: 80px;
+        height: 80px;
+    }
+
+    input {
+        width: 80px;
+        height: 40px;
+        font-size: medium;
+    }
+
+    #currentplayer {
+        padding-bottom: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        margin: 2%;
+    }
+
+    .canvas {
+        width: 60px;
+        height: 60px;
+    }
+
+    input {
+        width: 60px;
+        height: 30px;
+        font-size: small;
+    }
+
+    h1 {
+        font-size: 1.5em;
+    }
+}
+
