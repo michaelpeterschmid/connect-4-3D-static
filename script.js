@@ -1,260 +1,175 @@
-function checkwin(){
-    // Horizontale Überprüfung 3d
-    for(var i=0;i<gamefield.length;i++){
-        
-        for(var x=0; x<gamefield[i].length;x++){
-            var playerlist = [];
-            for(var y=0; y<gamefield[i][x].length;y++){
+// script.js
+// Encapsulate all logic in a Game class to avoid globals
 
-                if(gamefield[i][x][y] == player){
-                    playerlist.push(player)
-                }
-            }
-            checkPlayerlistLenght(playerlist)
-        }
+class Game {
+  // private fields
+  #containerSelector;
+  #playerImg;
+  #COLS = 4;
+  #ROWS = 4;
+  #CUBE_W = 200;
+  #CUBE_H = 100;
+  #HORIZ_OFFSET = 45;
+  #VERT_STEP = 25;
+  #BASE_Y = 65;
+  #DIRECTIONS = [
+    [1,0,0], [0,1,0], [0,0,1],
+    [1,1,0], [1,-1,0], [1,0,1], [1,0,-1], [0,1,1], [0,1,-1],
+    [1,1,1], [1,1,-1], [1,-1,1], [1,-1,-1]
+  ];
+  #IMAGES = {
+    red:   Object.assign(new Image(), { src: 'cube_red.png' }),
+    redP:  Object.assign(new Image(), { src: 'cube_red_preview.png' }),
+    green: Object.assign(new Image(), { src: 'cube_green.png' }),
+    greenP:Object.assign(new Image(), { src: 'cube_green_preview.png' })
+  };
+  #gamefield;
+  #counter = 0;
+  #player = '';
+  #gameIsOver = false;
+
+  constructor(containerSelector, playerImgSelector) {
+    this.#containerSelector = containerSelector;
+    this.#playerImg = document.querySelector(playerImgSelector);
+    this.#gamefield = Array.from({ length: this.#ROWS }, () =>
+      Array.from({ length: this.#COLS }, () => [])
+    );
+    this.#initStorage();
+    this.#initCanvases();
+  }
+
+  // private helpers
+  #initStorage() {
+    if (!sessionStorage.getItem('wincounter_red'))
+      sessionStorage.setItem('wincounter_red', 0);
+    if (!sessionStorage.getItem('wincounter_green'))
+      sessionStorage.setItem('wincounter_green', 0);
+  }
+
+  #initCanvases() {
+    // Try container first, otherwise all canvases in document
+    let canvases;
+    const container = document.querySelector(this.#containerSelector);
+    if (container) canvases = container.querySelectorAll('canvas');
+    else canvases = document.querySelectorAll('canvas');
+
+    canvases.forEach(canvas => {
+      canvas.addEventListener('mouseover', e => this.#handleMouseOver(e));
+      canvas.addEventListener('mouseout',  e => this.#handleMouseOut(e));
+      canvas.addEventListener('click',     e => this.handleClick(e));
+    });
+  }
+
+  #handleMouseOver(e) {
+    if (this.#gameIsOver) return;
+    const canvas = e.target;
+    const [r,c] = this.#getCoords(canvas.id);
+    const stack = this.#gamefield[r][c];
+    if (stack.length >= this.#ROWS) return;
+
+    const ctx = canvas.getContext('2d');
+    const img = this.#counter % 2 === 0 ? this.#IMAGES.redP : this.#IMAGES.greenP;
+    const y = this.#BASE_Y - stack.length * this.#VERT_STEP;
+    ctx.drawImage(img, this.#HORIZ_OFFSET, y, this.#CUBE_W, this.#CUBE_H);
+  }
+
+  #handleMouseOut(e) {
+    if (this.#gameIsOver) return;
+    const canvas = e.target;
+    const [r,c] = this.#getCoords(canvas.id);
+    const stack = this.#gamefield[r][c];
+    const ctx = canvas.getContext('2d');
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    this.#drawStack(ctx, stack);
+  }
+
+  // public for click binding
+  handleClick(e) {
+    if (e.target.tagName !== 'CANVAS') return;
+    this.play(e.target.id);
+  }
+
+  #drawStack(ctx, stack) {
+    stack.forEach((color, lvl) => {
+      const img = color === 'rot' ? this.#IMAGES.red : this.#IMAGES.green;
+      const y = this.#BASE_Y - lvl * this.#VERT_STEP;
+      ctx.drawImage(img, this.#HORIZ_OFFSET, y, this.#CUBE_W, this.#CUBE_H);
+    });
+  }
+
+  #getCoords(canvasId) {
+    const n = parseInt(canvasId.slice(1), 10) - 1;
+    return [Math.floor(n/this.#COLS), n % this.#COLS];
+  }
+
+  play(canvasId) {
+    if (this.#gameIsOver) return;
+    const [r,c] = this.#getCoords(canvasId);
+    const stack = this.#gamefield[r][c];
+    if (stack.length >= this.#ROWS) return;
+
+    this.#player = this.#counter % 2 === 0 ? 'rot' : 'grün';
+    stack.push(this.#player);
+
+    // immediately clear preview and redraw real stack
+    const canvas = document.getElementById(canvasId);
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    this.#drawStack(ctx, stack);
+
+    const layer = stack.length - 1;
+    if (this.#checkWinAt(r, c, layer)) {
+      this.#alertWin();
     }
 
-    // horizontale Überprüfung 2d
-    for(var ebene = 1; ebene<5; ebene++){
-        for(var i=0; i<gamefield.length;i++){
-            var playerlist = [];
-            for(var x=0; x<gamefield[i].length; x++){
-                if(gamefield[i][x][ebene]==player){
-                    playerlist.push(player)
-                }
-            }
-            checkPlayerlistLenght(playerlist)
-        }
+    this.#playerImg.src = this.#player === 'rot'
+      ? this.#IMAGES.green.src
+      : this.#IMAGES.red.src;
+
+    this.#counter++;
+  }
+
+  #alertWin() {
+    alert(this.#player + ' Hat das Spiel gewonnen!');
+    this.#wincounter();
+    this.#gameIsOver = true;
+  }
+
+  #wincounter() {
+    if (this.#player === 'rot')
+      sessionStorage.wincounter_red++;
+    else
+      sessionStorage.wincounter_green++;
+  }
+
+  #countDir(r,c,l, dr,dc,dl) {
+    let cnt = 0;
+    let nr=r+dr, nc=c+dc, nl=l+dl;
+    while (
+      nr>=0 && nr<this.#ROWS &&
+      nc>=0 && nc<this.#COLS &&
+      nl>=0 && nl<this.#gamefield[nr][nc].length &&
+      this.#gamefield[nr][nc][nl] === this.#player
+    ) {
+      cnt++;
+      nr+=dr; nc+=dc; nl+=dl;
     }
+    return cnt;
+  }
 
-    // vertikale Überprüfung 2d
-    for(var ebene = 1; ebene<5; ebene++){
-        for(var i=0; i<gamefield.length;i++){
-            var playerlist = [];
-            for(var x=0; x<gamefield[i].length; x++){
-                if(gamefield[x][i][ebene]==player){
-                    playerlist.push(player)
-                }
-            }
-            checkPlayerlistLenght(playerlist)
-        }
+  #checkWinAt(r,c,l) {
+    for (const [dr,dc,dl] of this.#DIRECTIONS) {
+      const total = 1 +
+        this.#countDir(r,c,l, dr,dc,dl) +
+        this.#countDir(r,c,l, -dr,-dc,-dl);
+      if (total >= 4) return true;
     }
-    // Diagonale Überprüfung von links nach rechts 2d
-    for(var ebene = 1; ebene<5; ebene++){
-        var playerlist = []
-        for(var row=0; row<gamefield.length; row++){
-            var cell = row;
-            
-            if(gamefield[row][cell][ebene]==player){
-                playerlist.push(player)
-            }
-            checkPlayerlistLenght(playerlist)
-        }
-    }
-
-    // Diagonale Überprüfung von rechts nach links 2d
-    for(var ebene = 1; ebene<5; ebene++){
-        var playerlist = []
-        
-        for(var row=0, cell=3; row<gamefield.length; row++,cell--){
-            //alert(gamefield[row][cell][ebene])
-            if(gamefield[row][cell][ebene]==player){
-                playerlist.push(player)
-            }
-            checkPlayerlistLenght(playerlist)
-        }
-    }
-
-    // horizontale Überprüfung von links nach rechts 3d
-        for(var i=0; i<gamefield.length;i++){
-            var playerlist = [];
-            for(var x=0; x<gamefield[i].length; x++){
-                var ebene = x+1
-                if(gamefield[i][x][ebene]==player){
-                    playerlist.push(player)
-                }
-            }
-            checkPlayerlistLenght(playerlist)
-        }
-
-    // Horizontale Prüfung von rechts nach links 3d
-        for(var row=0; row<gamefield.length;row++){
-            var playerlist = [];
-            for(var cell=0; cell<gamefield[row].length; cell++){
-                var ebene = (4 - cell)
-                if(gamefield[row][cell][ebene]==player){
-                    playerlist.push(player)
-                }
-            }
-            checkPlayerlistLenght(playerlist)
-        }
-
-    // vertikale Überprüfung von oben nach unten 3d
-        for(var row=0; row<gamefield.length;row++){
-            var playerlist = [];
-            for(var cell=0; cell<gamefield[row].length; cell++){
-                var ebene = cell + 1
-                if(gamefield[cell][row][ebene]==player){
-                    playerlist.push(player)
-                }
-            }
-            checkPlayerlistLenght(playerlist)
-        }
-
-    // vertikale Überprüfung von unten nach oben 3d
-    for(var row=0; row<gamefield.length;row++){
-        var playerlist = [];
-        for(var cell=0; cell<gamefield[row].length; cell++){
-            var ebene = (4 - cell) 
-            if(gamefield[cell][row][ebene]==player){
-                playerlist.push(player)
-            }
-        }
-        checkPlayerlistLenght(playerlist)
-    }
-
-    // Diagonale Überprüfung von oben links nach unten rechts 3d
-        var playerlist = []
-        for(var row=0; row<gamefield.length; row++){
-            var cell = row;
-            var ebene = row+1
-            
-            if(gamefield[row][cell][ebene]==player){
-                playerlist.push(player)
-            }
-            checkPlayerlistLenght(playerlist)
-        }
-
-    // Diagonale Überprüfung von unten rechts nach oben links 3d
-        var playerlist = []
-        for(var row=0; row<gamefield.length; row++){
-            var cell = row;
-            var ebene = 4-row
-            if(gamefield[row][cell][ebene]==player){
-                playerlist.push(player)
-            }
-
-            checkPlayerlistLenght(playerlist)
-
-        }
-    // Diagonale Überprüfung von oben rechts nach unten links 3d
-
-    var playerlist = []
-        for(var row=0; row<gamefield.length; row++){
-            var cell = 3-row
-            var ebene = row+1
-            
-            if(gamefield[row][cell][ebene]==player){
-                playerlist.push(player)
-            }
-            checkPlayerlistLenght(playerlist)
-        }
-
-    // Diagonale Überprüfung von unten links nach oben rechts 3d
-
-    var playerlist = []
-        for(var row=0; row<gamefield.length; row++){
-            var cell = 3-row
-            var ebene = 4-row
-            
-            if(gamefield[row][cell][ebene]==player){
-                playerlist.push(player)
-            }
-            if(checkPlayerlistLenght(playerlist)){}
-        }
     return false;
+  }
 }
 
-function checkPlayerlistLenght(playerlist){
-    if(playerlist.length==4){
-        alert(player + " Hat das Spiel gewonnen.")
-        
-        wincounter()
-        gameIsOver = true
-        return true
-    }
-}
-
-function wincounter(){
-    if(player=="rot"){
-            sessionStorage.wincounter_red =  sessionStorage.wincounter_red + 1
-        }
-    if(player=="grün"){
-        sessionStorage.wincounter_green = sessionStorage.wincounter_green + 1
-    }
-}
-
-function getIndexOfK(arr, k){
-    if (!arr){
-        return [];
-    }
-
-    for(var i=0; i<arr.length; i++){
-        for( var j = 0 ; j < arr[i].length; j ++ ) {
-            var index = arr[i][j].indexOf(k);
-            if (index > -1){
-                return [i, j,index];
-            }        
-        }
-    }
-}
-
-function play(position){
-    if(gameIsOver){
-        return;
-    }
-    var result = getIndexOfK(gamefield, position);
-    var positionsum = gamefield[result[0]][result[1]].length              
-    var canvas = document.getElementById(position);
-    var ctx = canvas.getContext("2d")
-
-    const img = new Image();
-    if(positionsum>4){
-        return;
-    }
-
-    if(counter % 2 == 0){
-        player = "rot";
-        gamefield[result[0]][result[1]].push(player)
-        img.src = 'cube_red.png';
-        var nextplayer = document.getElementById("playerimg")
-        nextplayer.src = "cube_green.png"
-    }else{
-        player = "grün";
-        gamefield[result[0]][result[1]].push(player)
-        img.src = 'cube_green.png';
-        var nextplayer = document.getElementById("playerimg")
-        nextplayer.src = "cube_red.png"   
-    }
-    img.onload = draw;
-
-    function draw() {
-        const destX = 45;
-        const destY = (90-(positionsum*25));
-        const destWidth = 200;
-        const destHeight = 100;
-        ctx.drawImage(img, destX, destY, destWidth, destHeight); 
-    }
-    
-    checkwin();
-    counter++
-}
-var gameIsOver = false;
-var player = "";
-var counter = 0;
-var gamefield = [[['c1'],['c2'],['c3'],['c4']],
-                    [['c5'],['c6'],['c7'],['c8']],
-                    [['c9'],['c10'],['c11'],['c12']],
-                [['c13'],['c14'],['c15'],['c16']]];
-//local storage
-var stats_red = sessionStorage.getItem("wincounter_red")
-if(!stats_red){
-    sessionStorage.setItem("wincounter_red", 0)
-}
-//alert(localStorage.getItem("wincounter_red"))
-
-var stats_green = sessionStorage.getItem("wincounter_green")
-if(!stats_green){
-    sessionStorage.setItem("wincounter_green", 0)
-}
-wincounter()
+// Instantiate and start the game
+document.addEventListener('DOMContentLoaded', () => {
+  new Game('#boardContainer', '#playerimg');
+});
