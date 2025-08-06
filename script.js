@@ -1,5 +1,21 @@
 // script.js
 // Encapsulate all logic in a Game class to avoid globals
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(reg => console.log('SW registriert:', reg.scope))
+      .catch(err => console.error('SW-Fehler:', err));
+  });
+}
+
+
+
+
+
+
+
+
+
 
 class Game {
   // private fields
@@ -28,6 +44,10 @@ class Game {
   #player = '';
   #gameIsOver = false;
 
+  /**
+   * @param {String} containerSelector - CSS selector for the parent element of the game board
+   * @param {String} playerImgSelector - CSS selector for the <img> element that shows the current player
+   */
   constructor(containerSelector, playerImgSelector) {
     this.#containerSelector = containerSelector;
     this.#playerImg = document.querySelector(playerImgSelector);
@@ -59,6 +79,14 @@ class Game {
       canvas.addEventListener('click',     e => this.handleClick(e));
     });
   }
+
+  /**
+   * Handles the mouseover event on a canvas element.
+   * If the game is not over and the stack at the hovered position is not full,
+   * it draws a preview piece on the canvas to indicate the current player's move.
+   *
+   * @param {Event} e - The mouseover event object.
+   */
 
   #handleMouseOver(e) {
     if (this.#gameIsOver) return;
@@ -103,6 +131,13 @@ class Game {
     return [Math.floor(n/this.#COLS), n % this.#COLS];
   }
 
+  /**
+   * Handles a player's move by adding a piece to the stack on the
+   * specified canvas element and updating the game state.
+   *
+   * @param {String} canvasId - The id of the canvas element where the
+   *                            player wants to drop the piece.
+   */
   play(canvasId) {
     if (this.#gameIsOver) return;
     const [r,c] = this.#getCoords(canvasId);
