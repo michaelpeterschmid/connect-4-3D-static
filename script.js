@@ -8,7 +8,7 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-
+document.getElementById('newgame').addEventListener('click', () => location.reload());
 
 
 
