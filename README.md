@@ -6,6 +6,7 @@
   - Connect Four in 3D, also known as 3D 4 in a Row, is a variation of the classic Connect Four game played on a three-dimensional grid. The objective is to be the first player to connect four of their game pieces in a row, either horizontally, vertically, or diagonally, in any of the three dimensions. good explanation: https://www.youtube.com/watch?v=c81LFAc1Uq8
 
 **This is what the my online version looks like**
-![Online Game Image](online_game.png)
+![Online Game Image](connect4.gif)
+
 **This is what the game looks like originially**
 ![Real Game Image](real_game.png)
