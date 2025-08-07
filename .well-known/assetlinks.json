@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "io.github.michaelpeterschmid.connect43doffline",
+        "sha256_cert_fingerprints": ["8C:5B:E8:65:F1:A1:F7:BF:C9:22:34:9D:44:D4:17:7D:22:E1:E9:51:47:52:32:02:B1:5B:7A:19:7E:AD:D6:CA"]
+      }
+    }]
