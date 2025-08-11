@@ -8,7 +8,7 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-document.getElementById('newgame').addEventListener('click', () => location.reload());
+
 
 
 
@@ -120,7 +120,7 @@ class Game {
 
   #drawStack(ctx, stack) {
     stack.forEach((color, lvl) => {
-      const img = color === 'rot' ? this.#IMAGES.red : this.#IMAGES.green;
+      const img = color === 'red' ? this.#IMAGES.red : this.#IMAGES.green;
       const y = this.#BASE_Y - lvl * this.#VERT_STEP;
       ctx.drawImage(img, this.#HORIZ_OFFSET, y, this.#CUBE_W, this.#CUBE_H);
     });
@@ -144,7 +144,7 @@ class Game {
     const stack = this.#gamefield[r][c];
     if (stack.length >= this.#ROWS) return;
 
-    this.#player = this.#counter % 2 === 0 ? 'rot' : 'grün';
+    this.#player = this.#counter % 2 === 0 ? 'red' : 'green';
     stack.push(this.#player);
 
     // immediately clear preview and redraw real stack
@@ -158,7 +158,7 @@ class Game {
       this.#alertWin();
     }
 
-    this.#playerImg.src = this.#player === 'rot'
+    this.#playerImg.src = this.#player === 'red'
       ? this.#IMAGES.green.src
       : this.#IMAGES.red.src;
 
@@ -166,13 +166,13 @@ class Game {
   }
 
   #alertWin() {
-    alert(this.#player + ' Hat das Spiel gewonnen!');
+    alert(this.#player + ' wins!');
     this.#wincounter();
     this.#gameIsOver = true;
   }
 
   #wincounter() {
-    if (this.#player === 'rot')
+    if (this.#player === 'red')
       sessionStorage.wincounter_red++;
     else
       sessionStorage.wincounter_green++;
