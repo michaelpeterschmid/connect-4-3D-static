@@ -1,21 +1,3 @@
-// script.js
-// Encapsulate all logic in a Game class to avoid globals
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .then(reg => console.log('SW registriert:', reg.scope))
-      .catch(err => console.error('SW-Fehler:', err));
-  });
-}
-
-
-
-
-
-
-
-
-
 
 class Game {
   // private fields

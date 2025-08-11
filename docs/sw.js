@@ -1,16 +1,16 @@
 // sw.js (replace your file)
 const CACHE_NAME = 'pwa-cache-v2';
 const APP_SHELL = [
-  '/',                 // make sure this resolves to your index.html
-  '/index.html',
-  '/manifest.json',
-  '/style.css',
-  '/script.js',
-  '/icons/icon-192.png',
-  '/icons/icon-512.png',
-  '/offline.html',     // NEW: offline fallback page
-  // add any other critical assets you need on first load
+  './',               // resolves to docs/index.html
+  './index.html',
+  './manifest.json',
+  './style.css',
+  './script.js',
+  './icons/icon-192.png',
+  './icons/icon-512.png',
+  './offline.html',
 ];
+
 
 self.addEventListener('install', (event) => {
   event.waitUntil((async () => {
@@ -53,9 +53,9 @@ self.addEventListener('fetch', (event) => {
       } catch (err) {
         const cache = await caches.open(CACHE_NAME);
         // Serve last known index or the offline page
-        return (await cache.match('/')) ||
-               (await cache.match('/index.html')) ||
-               (await cache.match('/offline.html'));
+        return (await cache.match('./')) ||
+               (await cache.match('./index.html')) ||
+               (await cache.match('./offline.html'));
       }
     })());
     return;
