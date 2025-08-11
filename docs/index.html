@@ -1,19 +1,12 @@
 <!DOCTYPE html>
 <html lang="de">
     <head>
+        <script type="module" src="pwabuilder-sw-register.js"></script>
         <link rel="manifest" href="manifest.json">
         <meta name="theme-color" content="#ff0000">
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>Score four</title>
         <link rel="stylesheet" href="style.css">
-        <!-- put this in <head> or before </body> -->
-        <script>
-        if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js', { scope: './' })
-            .then(r => console.log('SW registered:', r.scope))
-            .catch(console.error);
-        }
-        </script>
         <script defer src="script.js"></script>
     </head>
     <body>
