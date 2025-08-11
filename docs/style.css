@@ -8,6 +8,10 @@ details  {
    
 }
 
+#autor {
+    font-size: 0.7rem;
+}
+
 .canvas {
     width: 120px;
     height: 120px;
@@ -20,6 +24,28 @@ table {
     margin-left: auto;
     margin-right: auto;
 }
+
+/* make the select bigger & easier to tap */
+#aiLevel, #aiSide {
+  font-size: 16px;          /* text + control height */
+  padding: 8px 14px;        /* inner space */
+  height: 42px;             /* explicit control height */
+  min-width: 100px;         /* wider box */
+  box-sizing: border-box;
+
+  /* optional: more consistent look across browsers */
+
+  border: 1px solid #ccc;
+  border-radius: 8px; 
+}
+
+.nowrap {
+    white-space: nowrap; 
+}
+#aiSide {
+    margin-top: 1rem;
+}
+
 
 #currentplayer {
     padding-bottom: 15px;
@@ -41,10 +67,21 @@ button {
 }
 
 
-button:hover {
+button:enabled:hover {
     background-color: black;
     color: white;
 }
+
+
+
+button:disabled {
+    cursor: not-allowed;
+    background-color: rgb(94, 93, 93);
+    color: white;
+}
+
+
+
 
 /* Media queries for responsiveness */
 @media (max-width: 768px) {

@@ -1,4 +1,5 @@
 
+
 class Game {
   // private fields
   #containerSelector;
@@ -6,10 +7,10 @@ class Game {
   #COLS = 4;
   #ROWS = 4;
   #CUBE_W = 200;
-  #CUBE_H = 100;
+  #CUBE_H = 92;
   #HORIZ_OFFSET = 45;
-  #VERT_STEP = 25;
-  #BASE_Y = 65;
+  #VERT_STEP = 23;
+  #BASE_Y = 62;
   #DIRECTIONS = [
     [1,0,0], [0,1,0], [0,0,1],
     [1,1,0], [1,-1,0], [1,0,1], [1,0,-1], [0,1,1], [0,1,-1],
@@ -25,6 +26,8 @@ class Game {
   #counter = 0;
   #player = '';
   #gameIsOver = false;
+  #lastMove = null; // { r, c, l }
+
 
   /**
    * @param {String} containerSelector - CSS selector for the parent element of the game board
@@ -62,14 +65,6 @@ class Game {
     });
   }
 
-  /**
-   * Handles the mouseover event on a canvas element.
-   * If the game is not over and the stack at the hovered position is not full,
-   * it draws a preview piece on the canvas to indicate the current player's move.
-   *
-   * @param {Event} e - The mouseover event object.
-   */
-
   #handleMouseOver(e) {
     if (this.#gameIsOver) return;
     const canvas = e.target;
@@ -91,7 +86,8 @@ class Game {
     const ctx = canvas.getContext('2d');
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    this.#drawStack(ctx, stack);
+    this.#drawStack(ctx, stack, r, c);
+
   }
 
   // public for click binding
@@ -100,18 +96,39 @@ class Game {
     this.play(e.target.id);
   }
 
-  #drawStack(ctx, stack) {
+  #drawStack(ctx, stack, r, c) {
     stack.forEach((color, lvl) => {
       const img = color === 'red' ? this.#IMAGES.red : this.#IMAGES.green;
       const y = this.#BASE_Y - lvl * this.#VERT_STEP;
       ctx.drawImage(img, this.#HORIZ_OFFSET, y, this.#CUBE_W, this.#CUBE_H);
+
+      // highlight the last placed block
+      if (this.#lastMove &&
+          r === this.#lastMove.r &&
+          c === this.#lastMove.c &&
+          lvl === this.#lastMove.l) {
+        ctx.save();
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = '#FFD54A';               // warm yellow
+        ctx.shadowColor = 'rgba(255,213,74,0.8)';  // glow
+        ctx.shadowBlur = 12;
+        // draw a slightly inset rectangle to avoid clipping
+        ctx.strokeRect(this.#HORIZ_OFFSET + 2, y + 2, this.#CUBE_W - 4, this.#CUBE_H - 4);
+        ctx.restore();
+      }
     });
   }
+
 
   #getCoords(canvasId) {
     const n = parseInt(canvasId.slice(1), 10) - 1;
     return [Math.floor(n/this.#COLS), n % this.#COLS];
   }
+
+  #canvasId(r, c) {
+    return 'c' + (r * this.#COLS + c + 1);
+  }
+
 
   /**
    * Handles a player's move by adding a piece to the stack on the
@@ -122,30 +139,77 @@ class Game {
    */
   play(canvasId) {
     if (this.#gameIsOver) return;
-    const [r,c] = this.#getCoords(canvasId);
+
+    // coords and stack for this click
+    const [r, c] = this.#getCoords(canvasId);
     const stack = this.#gamefield[r][c];
     if (stack.length >= this.#ROWS) return;
 
+    // remember previous highlighted move (if any)
+    const prev = this._lastMove || null;
+
+    // push the new piece
     this.#player = this.#counter % 2 === 0 ? 'red' : 'green';
     stack.push(this.#player);
 
-    // immediately clear preview and redraw real stack
+    // layer index for the new piece + store as "last move"
+    const layer = stack.length - 1;
+    this._lastMove = { r, c, l: layer };
+
+    // if previous highlight was on a different canvas, redraw that canvas (no highlight)
+    if (prev && (prev.r !== r || prev.c !== c)) {
+      const prevId = 'c' + (prev.r * this.#COLS + prev.c + 1);
+      const pCanvas = document.getElementById(prevId);
+      if (pCanvas) {
+        const pctx = pCanvas.getContext('2d');
+        pctx.clearRect(0, 0, pCanvas.width, pCanvas.height);
+        this.#drawStack(pctx, this.#gamefield[prev.r][prev.c]); // no highlight here
+      }
+    }
+
+    // redraw the current canvas and add a glow on the newest block
     const canvas = document.getElementById(canvasId);
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     this.#drawStack(ctx, stack);
 
-    const layer = stack.length - 1;
+    // draw highlight rectangle for the newest block
+    const y = this.#BASE_Y - layer * this.#VERT_STEP;
+    ctx.save();
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = '#FFD54A';
+    ctx.shadowColor = 'rgba(255,213,74,0.8)';
+    ctx.shadowBlur = 12;
+    ctx.strokeRect(this.#HORIZ_OFFSET + 10, y + 9, this.#CUBE_W - 10, this.#CUBE_H - 15);
+    ctx.restore();
+
+    // win check
     if (this.#checkWinAt(r, c, layer)) {
       this.#alertWin();
     }
 
+    // flip current player image
     this.#playerImg.src = this.#player === 'red'
       ? this.#IMAGES.green.src
       : this.#IMAGES.red.src;
 
+    // counters / draw detection
     this.#counter++;
+    if (this.#counter === 64) {
+      alert('Draw!');
+      this.#gameIsOver = true;
+    }
+
+    // your existing AI UI locks on first move
+    if (this.#counter === 1) {
+      const aiToggleBtn = document.getElementById('aiToggleBtn');
+      if (aiToggleBtn) aiToggleBtn.disabled = true;
+      const aiControls = document.getElementById('aiControls');
+      if (aiControls) aiControls.style.display = 'none';
+      // (you already commented out disabling the selects)
+    }
   }
+
 
   #alertWin() {
     alert(this.#player + ' wins!');

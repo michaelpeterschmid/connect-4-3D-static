@@ -12,10 +12,14 @@
   <!-- PWABuilder SW registration -->
   <script type="module" src="pwabuilder-sw-register.js"></script>
   <script defer src="script.js"></script>
+  <!-- NEW: AI logic -->
+  <script defer src="ai.js"></script>
 </head>
 <body>
+  <span id="autor">By Michael Peter Schmid</span>
   <h2>CONNECT 4 3D</h2>
-  <h3>By Michael Peter Schmid</h3>
+  <p>Choose a mode and start playing by clicking on the board.</p>
+  <h3></h3>
 
   <table>
     <tr>
@@ -32,12 +36,43 @@
     <canvas class="canvas" id="c9"></canvas><canvas class="canvas" id="c10"></canvas><canvas class="canvas" id="c11"></canvas><canvas class="canvas" id="c12"></canvas><br>
     <canvas class="canvas" id="c13"></canvas><canvas class="canvas" id="c14"></canvas><canvas class="canvas" id="c15"></canvas><canvas class="canvas" id="c16"></canvas><br>
   </div>
-  <br>
-  <br>
+  <br><br>
 
-  <button id="newGameBtn" title="Start a new game">↻ New game</button>
-  <br>
-  <br>
+
+  <!-- AI controls -->
+  <div id="aiPanel" style="margin: .5rem 0 1rem 0;">
+    <button id="aiToggleBtn">Mode: vs AI</button>
+    <br>
+    <div id="aiControls" >
+      <label style="margin-left:.5rem">
+      Difficulty:
+    <select id="aiLevel">
+      <option value="easy" selected>Easy</option>
+      <option value="intermediate">Intermediate</option>
+      <option value="hard">Hard</option>
+      <option value="expert">Expert</option>
+    </select>
+    </label>
+    <span class="nowrap">
+    <label style="margin-left:.5rem">
+      AI side:
+      <select id="aiSide">
+        <option value="green">Green (second)</option>
+        <option value="red">Red (first)</option>
+      </select>
+    </label>
+    </span>
+    <span id="aiStatus" style="margin-left:.5rem;color:#666"></span>
+    <br>
+    <br>
+    </div>
+    
+  </div>
+  
+
+    <button id="newGameBtn" title="Start a new game">↻ New game</button>
+  <br><br>
+  <!-- /AI controls -->
 
   <details>
     <summary>Game instructions</summary>
