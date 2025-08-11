@@ -3,6 +3,10 @@ body {
     margin: 10%;
     text-align: center;
 }
+details  {
+    font-size: 1.2rem;
+   
+}
 
 .canvas {
     width: 120px;
@@ -21,11 +25,25 @@ table {
     padding-bottom: 15px;
 }
 
-input {
-    width: 100px;
+button { 
+    background-color: white;
+    border: solid rgb(15, 15, 15);
+    width: 200px;
     height: 50px;
     border-radius: 7px;
-    font-size: larger;
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+}
+
+
+button:hover {
+    background-color: black;
+    color: white;
 }
 
 /* Media queries for responsiveness */
@@ -37,13 +55,12 @@ input {
     .canvas {
         width: 80px;
         height: 80px;
-        margin-bottom: -3.5px;
+        margin-bottom: -5px;
     }
 
-    input {
-        width: 80px;
+    button {
+        width: 180px;
         height: 40px;
-        font-size: medium;
     }
 
     #currentplayer {
@@ -59,17 +76,17 @@ input {
     .canvas {
         width: 60px;
         height: 60px;
-        margin-bottom: -2.5px;
+        margin-bottom: -5px;
     }
 
-    input {
-        width: 60px;
+    button {
+        width: 170px;
         height: 30px;
-        font-size: small;
     }
 
     h1 {
         font-size: 1.5em;
     }
 }
+
 

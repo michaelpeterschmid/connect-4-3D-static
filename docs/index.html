@@ -1,30 +1,55 @@
 <!DOCTYPE html>
 <html lang="de">
-    <head>
-        <script type="module" src="pwabuilder-sw-register.js"></script>
-        <link rel="manifest" href="manifest.json">
-        <meta name="theme-color" content="#ff0000">
-        <meta name="viewport" content="width=device-width,initial-scale=1">
-        <title>Score four</title>
-        <link rel="stylesheet" href="style.css">
-        <script defer src="script.js"></script>
-    </head>
-    <body>
-        <h2>4 GEWINNT 3D</h2> 
-    <h3>By Michael Peter Schmid</h3>
-        <table>
-            <tr>
-                <td><h3>Player = </h3></td><td id="currentplayer"><img id="playerimg" src="cube_red.png" width="50px" height="50px" alt=""></td>
-            </tr>
-        </table>
-         
-        <div id="game">
-            <canvas  class="canvas" id="c1" ></canvas><canvas  class="canvas" id="c2" ></canvas><canvas  class="canvas" id="c3" ></canvas><canvas  class="canvas" id="c4" ></canvas><br>
-            <canvas  class="canvas" id="c5" ></canvas><canvas  class="canvas" id="c6" ></canvas><canvas  class="canvas" id="c7" ></canvas><canvas  class="canvas" id="c8" ></canvas><br>
-            <canvas  class="canvas" id="c9" ></canvas><canvas  class="canvas" id="c10"></canvas><canvas  class="canvas" id="c11"></canvas><canvas  class="canvas" id="c12"></canvas><br>
-            <canvas  class="canvas" id="c13"></canvas><canvas  class="canvas" id="c14"></canvas><canvas  class="canvas" id="c15" "></canvas><canvas  class="canvas" id="c16"></canvas><br>
-        </div>
-        <br>
-    </body>
-        
+<head>
+  <meta charset="utf-8">
+  <meta name="theme-color" content="#ff0000">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Score four</title>
+
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+
+  <!-- PWABuilder SW registration -->
+  <script type="module" src="pwabuilder-sw-register.js"></script>
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <h2>CONNECT 4 3D</h2>
+  <h3>By Michael Peter Schmid</h3>
+
+  <table>
+    <tr>
+      <td><h3>Player = </h3></td>
+      <td id="currentplayer">
+        <img id="playerimg" src="cube_red.png" width="50" height="50" alt="">
+      </td>
+    </tr>
+  </table>
+
+  <div id="game">
+    <canvas class="canvas" id="c1"></canvas><canvas class="canvas" id="c2"></canvas><canvas class="canvas" id="c3"></canvas><canvas class="canvas" id="c4"></canvas><br>
+    <canvas class="canvas" id="c5"></canvas><canvas class="canvas" id="c6"></canvas><canvas class="canvas" id="c7"></canvas><canvas class="canvas" id="c8"></canvas><br>
+    <canvas class="canvas" id="c9"></canvas><canvas class="canvas" id="c10"></canvas><canvas class="canvas" id="c11"></canvas><canvas class="canvas" id="c12"></canvas><br>
+    <canvas class="canvas" id="c13"></canvas><canvas class="canvas" id="c14"></canvas><canvas class="canvas" id="c15"></canvas><canvas class="canvas" id="c16"></canvas><br>
+  </div>
+  <br>
+  <br>
+
+  <button id="newGameBtn" title="Start a new game">↻ New game</button>
+  <br>
+  <br>
+
+  <details>
+    <summary>Game instructions</summary>
+    <p>
+      Connect Four in 3D, also known as 3D 4 in a Row, is a variation of the classic Connect Four game played on a three-dimensional grid. The objective is to be the first player to connect four of their game pieces in a row, either horizontally, vertically, or diagonally, in any of the three dimensions. good explanation:
+      <a href="https://www.youtube.com/watch?v=c81LFAc1Uq8" target="_blank" rel="noopener noreferrer">Watch YouTube tutorial</a>
+    </p>
+  </details>
+
+  <script>
+    // Reload to reset state (works offline via SW cache)
+    document.getElementById('newGameBtn').addEventListener('click', () => location.reload());
+  </script>
+</body>
 </html>
