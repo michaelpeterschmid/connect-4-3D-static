@@ -15,6 +15,7 @@
 
   // Difficulty presets
   const PRESETS = {
+    supereasy:    { type: 'random' },
     easy:         { type: 'minimax', depth: 1 },
     intermediate: { type: 'minimax', depth: 2 },
     hard:         { type: 'minimax', depth: 4 },

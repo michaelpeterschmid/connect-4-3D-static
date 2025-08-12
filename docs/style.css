@@ -3,9 +3,13 @@ body {
     margin: 5%;
     text-align: center;
 }
-details  {
+details  summary, details p  {
     font-size: 1.2rem;
    
+}
+
+h2 {
+    font-size: 1.7rem;
 }
 
 #autor {
@@ -27,16 +31,20 @@ table {
 
 /* make the select bigger & easier to tap */
 #aiLevel, #aiSide {
-  font-size: 16px;          /* text + control height */
+  font-size: 1.3rem;         /* text + control height */
   padding: 8px 14px;        /* inner space */
-  height: 42px;             /* explicit control height */
-  min-width: 100px;         /* wider box */
+  min-height: 4rem;            /* explicit control height */
+  min-width: 20%;         /* wider box */
   box-sizing: border-box;
 
   /* optional: more consistent look across browsers */
 
   border: 1px solid #ccc;
   border-radius: 8px; 
+}
+
+#aiControls {
+    font-size: 1.3rem;
 }
 
 .nowrap {
@@ -54,8 +62,8 @@ table {
 button { 
     background-color: white;
     border: solid rgb(15, 15, 15);
-    width: 200px;
-    height: 50px;
+    min-width: 25%;
+    min-height: 5rem;
     border-radius: 7px;
     font-size: 1rem;
     font-weight: bold;
@@ -86,7 +94,7 @@ button:disabled {
 /* Media queries for responsiveness */
 @media (max-width: 768px) {
     body {
-        margin: 5%;
+        margin: 3%;
     }
 
     .canvas {
@@ -96,8 +104,8 @@ button:disabled {
     }
 
     button {
-        width: 180px;
-        height: 40px;
+        min-width: 30%;
+        min-height: 40px;
     }
 
     #currentplayer {
@@ -107,7 +115,7 @@ button:disabled {
 
 @media (max-width: 480px) {
     body {
-        margin: 2%;
+        margin-top: 2%;
     }
 
     .canvas {
@@ -117,13 +125,11 @@ button:disabled {
     }
 
     button {
-        width: 170px;
-        height: 30px;
+        min-width: 40%;
+        min-height: 30px;
     }
 
-    h1 {
-        font-size: 1.5em;
-    }
+
 }
 
 
