@@ -10,7 +10,15 @@
   <link rel="stylesheet" href="style.css">
 
   <!-- PWABuilder SW registration -->
-  <script type="module" src="pwabuilder-sw-register.js"></script>
+  <script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker
+      .register('./pwabuilder-sw.js', { scope: './' })
+      .then(r => console.log('SW registered:', r.scope))
+      .catch(err => console.error('SW registration failed:', err));
+  }
+</script>
+
   <script defer src="script.js"></script>
   <!-- NEW: AI logic -->
   <script defer src="ai.js"></script>

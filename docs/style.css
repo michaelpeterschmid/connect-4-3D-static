@@ -1,6 +1,6 @@
 /* Default for computer */
 body {
-    margin: 10%;
+    margin: 5%;
     text-align: center;
 }
 details  {
@@ -13,8 +13,8 @@ details  {
 }
 
 .canvas {
-    width: 120px;
-    height: 120px;
+    width: 140px;
+    height: 140px;
     background-color: aliceblue;
     border: solid black;
     margin-bottom: -5px;
@@ -90,8 +90,8 @@ button:disabled {
     }
 
     .canvas {
-        width: 80px;
-        height: 80px;
+        width: 90px;
+        height: 90px;
         margin-bottom: -5px;
     }
 
@@ -111,8 +111,8 @@ button:disabled {
     }
 
     .canvas {
-        width: 60px;
-        height: 60px;
+        width: 70px;
+        height: 70px;
         margin-bottom: -5px;
     }
 
