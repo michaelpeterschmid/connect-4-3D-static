@@ -200,7 +200,7 @@ function updateModeUI(){
       if (acceptedCounter > before) { uiStatus(''); return; }                 // a move was accepted
       if (i >= Math.min(queue.length, 16)) { uiStatus(''); return; }          // safety
       const [r,c] = queue[i++];
-      uiStatus('thinking…');
+      //uiStatus('thinking…');
       if (!clickRC(r,c)) { setTimeout(tryNext, 30); return; }
       setTimeout(() => {
         if (acceptedCounter > before) { uiStatus(''); return; }               // accepted

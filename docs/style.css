@@ -47,15 +47,17 @@ table {
   min-height: 4rem;            /* explicit control height */
   min-width: 20%;         /* wider box */
   box-sizing: border-box;
-
+  margin: 2%;
   /* optional: more consistent look across browsers */
 
   border: 1px solid #ccc;
   border-radius: 8px; 
 }
 
+
 #aiControls {
     font-size: 1.3rem;
+    
 }
 
 .nowrap {

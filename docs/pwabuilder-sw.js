@@ -1,5 +1,5 @@
 // pwabuilder-sw.js
-const CACHE = "pwabuilder-offline-v6";
+const CACHE = "pwabuilder-offline-v7";
 const OFFLINE_FALLBACK_PAGE = "offline.html";
 const PRECACHE_URLS = ["index.html","offline.html","script.js","style.css","manifest.json","cube_red.png","cube_green.png","icons/icon-192.png","icons/icon-512.png"];
 
