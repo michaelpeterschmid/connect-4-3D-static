@@ -1,6 +1,17 @@
 /* Default for computer */
-body {
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body main {
+    
     margin: 5%;
+    text-align: center;
+}
+
+body{
     text-align: center;
 }
 details  summary, details p  {
@@ -130,6 +141,20 @@ button:disabled {
     }
 
 
+}
+
+/* ||| Footer Styles zusätzlich zu pico|||  */
+.footerdiv{
+    
+    text-align: left;
+    width: 100%;
+    background-color: rgb(26, 26, 26);
+    color: whitesmoke;
+}
+
+.footerdiv footer section p, .footerdiv footer section h2{
+    color: whitesmoke;
+    padding-left: 5%;
 }
 
 
