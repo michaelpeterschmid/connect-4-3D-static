@@ -57,10 +57,18 @@
 
 
   <!-- AI controls -->
-  <div id="aiPanel" style="margin: .5rem 0 1rem 0;">
-    <button id="aiToggleBtn">Mode: vs AI</button>
+
+
     <br>
     <div id="aiControls" >
+        <div id="aiPanel" style="margin: .5rem 0 1rem 0;">
+        <label id="aiModeLabel">Mode:
+        <select id="aiMode">
+          <option value="ai" selected>vs AI</option>
+          <option value="friend">vs Friend</option>
+        </select>
+      </label>
+<br>
       <label style="margin-left:.5rem">
       Difficulty:
     <select id="aiLevel">

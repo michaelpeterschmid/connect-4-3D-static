@@ -41,7 +41,7 @@ table {
 }
 
 /* make the select bigger & easier to tap */
-#aiLevel, #aiSide {
+#aiLevel, #aiSide, #aiMode {
   font-size: 1.3rem;         /* text + control height */
   padding: 8px 14px;        /* inner space */
   min-height: 4rem;            /* explicit control height */

@@ -1,4 +1,6 @@
-/* ai.js — Play vs AI (Easy / Intermediate / Hard / Expert)
+/* 
+  Disclaimer: This file was generated with chatGPT
+  ai.js — Play vs AI (Easy / Intermediate / Hard / Expert)
    Non-intrusive: no wrapping Game, no blocking clicks.
    We observe canvas clicks, then mirror ONLY if the player image flips.
 */
@@ -149,16 +151,14 @@
   let aiEnabled=true;
 
   // SHOW difficulty on button when AI mode is on
-  function updateToggleLabel(){ 
-    const sel = $('aiLevel');
-    const diff = sel ? sel.value : ''; // "easy" | "intermediate" | "hard" | "expert"
+function updateModeUI(){
+  const modeSel = $('aiMode');
+  aiEnabled = modeSel ? (modeSel.value === 'ai') : true;
 
-    const b = $('aiToggleBtn');
-    if (b) b.textContent = aiEnabled ? `Mode: vs AI (${diff})` : 'Mode: vs Friend';
+  const el = $('aiControls');
+  if (el) el.style.display = aiEnabled ? 'block' : 'block';
+}
 
-    const el = $('aiControls'); // keep your existing id
-    if (el) el.style.display = aiEnabled ? 'block' : 'none';
-  }
 
   // Determine the player-to-move from #playerimg
   function readPlayerFromImg(){
@@ -238,20 +238,20 @@
 
   // Wire UI
   function boot(){
-    const t=$('aiToggleBtn');
-    if (t){
-      t.addEventListener('click', () => {
-        aiEnabled = !aiEnabled;
-        updateToggleLabel();
-        // If AI is red and it's red to move now, start
+    const modeSel = $('aiMode');
+    if (modeSel){
+      modeSel.addEventListener('change', () => {
+        updateModeUI();
         if (aiEnabled) setTimeout(maybeAIMove, 20);
       });
-      updateToggleLabel();
     }
-    const lvl=$('aiLevel'); if (lvl) lvl.addEventListener('change', ()=> { if (aiEnabled) maybeAIMove(); updateToggleLabel(); });
+    updateModeUI();
+
+    const lvl=$('aiLevel'); if (lvl) lvl.addEventListener('change', ()=> { if (aiEnabled) maybeAIMove(); });
     const side=$('aiSide'); if (side) side.addEventListener('change', ()=> aiEnabled && maybeAIMove());
     const ng=$('newGameBtn'); if (ng) ng.addEventListener('click', ()=> { /* reload resets everything */ });
   }
+
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();

@@ -200,14 +200,20 @@ class Game {
       this.#gameIsOver = true;
     }
 
-    // your existing AI UI locks on first move
-    if (this.#counter === 1) {
-      const aiToggleBtn = document.getElementById('aiToggleBtn');
-      if (aiToggleBtn) aiToggleBtn.disabled = true;
-      const aiControls = document.getElementById('aiControls');
-      if (aiControls) aiControls.style.display = 'none';
-      // (you already commented out disabling the selects)
-    }
+  if (this.#counter === 1) {
+    const aiMode = document.getElementById('aiMode');
+    if (aiMode) aiMode.disabled = true;
+
+    const aiLevel = document.getElementById('aiLevel');
+    if (aiLevel) aiLevel.disabled = true;
+
+    const aiSide = document.getElementById('aiSide');
+    if (aiSide) aiSide.disabled = true;
+
+    // keep aiControls visible → no style.display change
+  }
+
+
   }
 
 
