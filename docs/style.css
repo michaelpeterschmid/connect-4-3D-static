@@ -104,7 +104,7 @@ button:disabled {
 
 /* Media queries for responsiveness */
 @media (max-width: 768px) {
-    body {
+    body main {
         margin: 3%;
     }
 
@@ -125,7 +125,7 @@ button:disabled {
 }
 
 @media (max-width: 480px) {
-    body {
+    body main{
         margin-top: 2%;
     }
 
@@ -154,7 +154,7 @@ button:disabled {
 
 .footerdiv footer section p, .footerdiv footer section h2{
     color: whitesmoke;
-    padding-left: 5%;
+    padding-left: 10%;
 }
 
 
