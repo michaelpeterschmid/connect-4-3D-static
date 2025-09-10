@@ -4,7 +4,7 @@
   "description": "Offline-fähiges 3D-Connect-Four-Spiel",
   "start_url": "./",
   "scope": "./",
-  "display": "standalone",
+  "display": "fullscreen",
   "background_color": "#ffffff",
   "theme_color": "#ff0000",
   "icons": [

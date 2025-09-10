@@ -4,19 +4,22 @@
   <meta charset="utf-8">
   <meta name="theme-color" content="#ff0000">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+
   <title>Score four</title>
 
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="style.css">
-
+  <link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.conditional.min.css">
   <!-- PWABuilder SW registration -->
   <script>
-  if ('serviceWorker' in navigator) {
+/*   if ('serviceWorker' in navigator) {
     navigator.serviceWorker
       .register('./pwabuilder-sw.js', { scope: './' })
       .then(r => console.log('SW registered:', r.scope))
       .catch(err => console.error('SW registration failed:', err));
-  }
+  } */
 </script>
 
   <script defer src="script.js"></script>
@@ -59,18 +62,25 @@
   <!-- AI controls -->
 
 
-    <br>
-    <div id="aiControls" >
-        <label id="aiModeLabel" style="margin-left:.5rem">
-          Mode:
+    
+    <div class="pico container grid" id="aiControls" >
+      <table>
+        <tr>
+        <td>
+        <label id="aiModeLabel" >
+          Mode:</label>
+        </td>
+        <td>
         <select id="aiMode">
           <option value="ai" selected>vs AI</option>
           <option value="friend">vs Friend</option>
         </select>
-      </label>
-      <br>
-      <label style="margin-left:.5rem">
-      Difficulty:
+      </td>
+      </tr>
+
+    <tr><td><label >
+      Difficulty: </label></td>
+    <td>
     <select id="aiLevel">
       <option value="supereasy">Super easy</option>
       <option value="easy" selected>Easy</option>
@@ -78,24 +88,33 @@
       <option value="hard">Hard</option>
       <option value="expert">Expert</option>
     </select>
-    </label>
-    <span class="nowrap">
-    <label style="margin-left:.5rem">
-      AI side:
-      <select id="aiSide">
-        <option value="green">Green (second)</option>
-        <option value="red">Red (first)</option>
-      </select>
-    </label>
-    </span>
-    <span id="aiStatus" style="margin-left:.5rem;color:#666"></span>
+      </td>
+      </tr>
+
+      <tr>
+      <td>
+      <label >
+        AI side:
+        </label> </td>
+        <td>
+        <select id="aiSide">
+          <option value="green">Green (second)</option>
+          <option value="red">Red (first)</option>
+        </select>
+      </td>
+    </tr>
+    </table>
+
+
+    <span id="aiStatus"></span>
     <br>
-    <br>
-    
+      <button type="submit" id="newGameBtn" title="Start a new game">↻ New game</button>
   </div>
+
+  
   
 
-    <button id="newGameBtn" title="Start a new game">↻ New game</button>
+    
   <br><br>
   <!-- /AI controls -->
 

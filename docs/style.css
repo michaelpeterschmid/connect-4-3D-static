@@ -35,6 +35,8 @@ h2 {
     margin-bottom: -5px;
 }
 
+
+
 table {
     margin-left: auto;
     margin-right: auto;
@@ -71,38 +73,6 @@ table {
 #currentplayer {
     padding-bottom: 15px;
 }
-
-button { 
-    background-color: white;
-    border: solid rgb(15, 15, 15);
-    min-width: 25%;
-    min-height: 5rem;
-    border-radius: 7px;
-    font-size: 1rem;
-    font-weight: bold;
-    padding: 1.5rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0 auto;
-}
-
-
-button:enabled:hover {
-    background-color: black;
-    color: white;
-}
-
-
-
-button:disabled {
-    cursor: not-allowed;
-    background-color: rgb(94, 93, 93);
-    color: white;
-}
-
-
-
 
 /* Media queries for responsiveness */
 @media (max-width: 768px) {
