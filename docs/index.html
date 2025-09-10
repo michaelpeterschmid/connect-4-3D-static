@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" data-theme="light"> <!--force white mode (because of pico)-->
   <meta name="theme-color" content="#ff0000">
   <meta name="viewport" content="width=device-width,initial-scale=1">
 
@@ -14,12 +14,12 @@
   href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.conditional.min.css">
   <!-- PWABuilder SW registration -->
   <script>
-/*   if ('serviceWorker' in navigator) {
+  if ('serviceWorker' in navigator) {
     navigator.serviceWorker
       .register('./pwabuilder-sw.js', { scope: './' })
       .then(r => console.log('SW registered:', r.scope))
       .catch(err => console.error('SW registration failed:', err));
-  } */
+  }
 </script>
 
   <script defer src="script.js"></script>
