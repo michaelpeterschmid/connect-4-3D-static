@@ -50,6 +50,7 @@ function joinQueue(event){
     document.getElementById("roomid").remove();
     document.getElementById("joinRoomBtn").remove();
     document.getElementById("joinQueueBtn").remove();
+    document.getElementById("roomcontainer").innerHTML = "Waiting for other player to join queue...";
 }
 
 socket.on("connect", () => {
@@ -74,6 +75,7 @@ socket.on("queue-success", queueRoom => {
     room = queueRoom;
     let room_h3 = `roomid: ${queueRoom}`;
     document.getElementById("roomcontainer").innerHTML = room_h3;
+    initGameField()
 
 })
 
