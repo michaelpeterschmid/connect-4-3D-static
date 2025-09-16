@@ -13,7 +13,7 @@ let color;
 let yourTurn = true
 
 //sockets 
-const socket = io("https://connect43d.onrender.com/");
+const socket = io("https://connect43d-yfa5.onrender.com/");
 let room;
 
 joinRoomForm.addEventListener("submit", joinRoom);
