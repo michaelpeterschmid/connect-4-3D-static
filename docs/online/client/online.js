@@ -11,6 +11,7 @@ let gamefield = [
 let gameOver = false;
 let color;
 let yourTurn = true
+let enoughPlayersInQueue = false
 
 //sockets 
 const socket = io("https://connect43d-yfa5.onrender.com/");
@@ -69,7 +70,7 @@ socket.on("ready-to-start", () => {
 
 socket.on("queue-success", queueRoom => {
     alert("Two players are in this room. You may start playing!");
-    enoughPlayers = true;
+    enoughPlayersInQueue = true;
     room = queueRoom;
     let room_h3 = `roomid: ${queueRoom}`;
     document.getElementById("roomcontainer").innerHTML = room_h3;

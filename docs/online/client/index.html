@@ -59,6 +59,16 @@
         z-index: calc(var(--i) + 1);
     }
 
+    table {
+        margin: 0 auto;
+    }
+    table img {
+        max-height: 1.5rem;
+        max-height: clamp(1.5rem, 1.0510204081632653rem + 2.0408163265306123vw, 3.5rem);
+        width: auto;
+        padding-left: 1rem;
+    }
+
 
     @media  (min-width: 1000px) {
         #gamefield{
@@ -109,11 +119,11 @@
         <h3><div class="center" id="roomcontainer">You haven't joined a room so far</div></h3>
 
         <br>
-        <div class="grid">
-            <p class=""><h4>Current player:  </h4><img  id="currentPlayer" src="./img/cube_red.png" alt=""></p>
-        </div>
 
     </div>
+    <table><tr>
+        <td><h3>Current player:  </h3></td><td><img  id="currentPlayer" src="./img/cube_red.png" alt=""></td>
+    </tr></table>
     <br>
 
 

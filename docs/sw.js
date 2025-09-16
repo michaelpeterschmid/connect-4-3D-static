@@ -1,7 +1,7 @@
 //v3
 
-const appShellAssets = "site-static-v8";
-const dynamicCache = "site-dynamic-v8";
+const appShellAssets = "site-static-v9";
+const dynamicCache = "site-dynamic-v9";
 const assets = [
     "./", //we want to store the results of requests in the cache
     "./index.html",
@@ -59,7 +59,7 @@ self.addEventListener("activate", evt => {
 self.addEventListener("fetch", evt => {
     
     //console.log("fetch event", evt)
-    //here we need to intercept fetch requests by checking if they are in our cache.
+    //here we need to intercept fetch requeests by checking if they are in our cache.
     evt.respondWith(
         caches.match(evt.request).then(chacheRes => {
             return chacheRes || fetch(evt.request).then(fetchRes => {
