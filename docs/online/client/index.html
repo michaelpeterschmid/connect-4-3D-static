@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--socket cdn for the client-->
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+
+    <!-- If you also have your own module file -->
+    <script defer type="module" src="./online.js"></script>
+    <title>Score four online</title>
+
+      <link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.conditional.min.css">
+
+  <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    .nowrap {
+        white-space: nowrap;
+    }
+
+    .center {
+        text-align: center;
+    }
+
+    .cell{
+        user-select: none;              /* standard */
+        -webkit-user-select: none;      /* Safari/iOS */
+        -ms-user-select: none;          /* old Edge/IE */
+        -webkit-tap-highlight-color: transparent; /* mobile tap flash */
+        width: 100%;
+        aspect-ratio: 1 / 1;  /* height will match width */
+        border: 1px solid black;
+        background-color: aliceblue;
+        display: grid;
+        place-items: center; /* centers the image */
+        position: relative;
+        /*statis is default for position. when ohter value is used the we can use properties
+        like top, bottom, left right z-index*/
+        
+    }
+    .cell img{
+        background: none;
+        position: absolute; /*will always be positioned relative to its nearest ancestor that has a specified position (mostly positions: realtive;)*/
+        left: 50%;
+        bottom: 0;                      /* all start at the bottom */
+        transform: translate(-50%, calc(var(--i) * -24%));
+        /* ^ move each layer up by 28% of its own height times index */
+        
+        width: 80%;                    /* image scales with the cell */
+        height: auto;
+        pointer-events: none;
+        z-index: calc(var(--i) + 1);
+    }
+
+
+    @media  (min-width: 1000px) {
+        #gamefield{
+            width: 60%;
+        }
+    }
+
+    @media  (min-width: 1400px) {
+        #gamefield{
+            width: 50%;
+        }
+    }
+
+    @media  (min-width: 1600px) {
+        #gamefield{
+            width: 37%;
+        }
+    }
+
+    @media  (min-width: 2000px) {
+        #gamefield{
+            width: 25%;
+        }
+    }
+
+  </style>
+
+</head>
+<body>
+
+
+    <div class="pico container">
+        <br>
+        <h1 class="center">Connect 4 3D ONLINE</h1>
+        <br>
+        <form id="joinRoomForm">
+            <fieldset role="group">
+                <input type="text" id="roomid" placeholder="Enter roomid to join">
+                 <input id="joinRoomBtn" type="submit" value="join this room">
+
+            </fieldset>
+        </form>
+        <p class="center"><b>or</b></p>
+       
+        <button type="submit" id="joinQueueBtn">find a match (queue)</button>
+        <a href="../../index.html"><button type="submit">Back to start page</button></a>
+        <br>
+        <h3><div class="center" id="roomcontainer">You haven't joined a room so far</div></h3>
+
+        <br>
+        <div class="grid">
+            <p class=""><h4>Current player:  </h4><img  id="currentPlayer" src="./img/cube_red.png" alt=""></p>
+        </div>
+
+    </div>
+    <br>
+
+
+    <div class="pico container" id="gamefield">
+
+    </div>
+    
+</body>
+</html>

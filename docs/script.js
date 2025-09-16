@@ -138,6 +138,7 @@ class Game {
    *                            player wants to drop the piece.
    */
   play(canvasId) {
+
     if (this.#gameIsOver) return;
 
     // coords and stack for this click
@@ -201,6 +202,7 @@ class Game {
     }
 
   if (this.#counter === 1) {
+    /* document.getElementById("onlineBtn").style.display = "None"; */
     const aiMode = document.getElementById('aiMode');
     if (aiMode) aiMode.disabled = true;
 
