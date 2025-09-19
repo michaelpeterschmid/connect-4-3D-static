@@ -101,7 +101,7 @@ function initGameField(){
 
         cells.forEach(cell => {
             cell.addEventListener("click", () => play(cell)) /*Need to write like this so that it is not executet right away but only after click*/
-            cell.addEventListener("mouseover", () => hover(cell))
+           /* cell.addEventListener("mouseover", () => hover(cell)) */
         });
 }
 
