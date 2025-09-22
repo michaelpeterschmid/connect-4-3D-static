@@ -101,7 +101,7 @@ function initGameField(){
 
         cells.forEach(cell => {
             cell.addEventListener("click", () => play(cell)) /*Need to write like this so that it is not executet right away but only after click*/
-            cell.addEventListener("mouseover", () => hover(cell))
+            /*cell.addEventListener("mouseover", () => hover(cell))*/
         });
 }
 
@@ -118,7 +118,7 @@ async function play(cell){
   }
 
   let x_y_pos = cell.id.split(".")
-  const i = cell.querySelectorAll('img').length-1;
+  const i = cell.querySelectorAll('img').length;
   if(i>3 || gamefield[x_y_pos[0]][x_y_pos[1]].length >= 4 || gameOver) return;
   color = counter % 2 === 0 ? 'red' : 'green';
 
@@ -152,7 +152,7 @@ async function play(cell){
 
 async function replicate(cell){
   let x_y_pos = cell.id.split(".")
-  const i = cell.querySelectorAll('img').length-1;
+  const i = cell.querySelectorAll('img').length;
   if(i>3 || gamefield[x_y_pos[0]][x_y_pos[1]].length >= 4 || gameOver) return;
   color = counter % 2 === 0 ? 'red' : 'green';
 
