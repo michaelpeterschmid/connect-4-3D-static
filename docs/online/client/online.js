@@ -152,7 +152,7 @@ async function play(cell){
 
 async function replicate(cell){
   let x_y_pos = cell.id.split(".")
-  const i = cell.querySelectorAll('img').length;
+  const i = cell.querySelectorAll('img').length-1;
   if(i>3 || gamefield[x_y_pos[0]][x_y_pos[1]].length >= 4 || gameOver) return;
   color = counter % 2 === 0 ? 'red' : 'green';
 
