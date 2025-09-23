@@ -74,6 +74,11 @@ table {
     padding-bottom: 15px;
 }
 
+.menubutton {
+    min-width: 40%;
+    min-height: 50px;
+}
+
 /* Media queries for responsiveness */
 @media (max-width: 768px) {
     body main {
@@ -86,7 +91,7 @@ table {
         margin-bottom: -5px;
     }
 
-    button {
+    .menubutton {
         min-width: 30%;
         min-height: 40px;
     }
@@ -107,7 +112,7 @@ table {
         margin-bottom: -5px;
     }
 
-    button {
+    .menubutton {
         min-width: 40%;
         min-height: 30px;
     }
