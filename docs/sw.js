@@ -1,7 +1,7 @@
 //v3
 
-const appShellAssets = "site-static-v12";
-const dynamicCache = "site-dynamic-v12";
+const appShellAssets = "site-static-v13";
+const dynamicCache = "site-dynamic-v13";
 const assets = [
     "./", //we want to store the results of requests in the cache
     "./index.html",
@@ -64,7 +64,7 @@ self.addEventListener("fetch", evt => {
         caches.match(evt.request).then(chacheRes => {
             return chacheRes || fetch(evt.request).then(fetchRes => {
                     return caches.open(dynamicCache).then(cache => {
-                        if(!evt.request.url.includes("/online/client/index.html")){ //we dont want to cache online index.html file.
+                        if(!evt.request.url.includes("online")){ //we dont want to cache any online files since they may change and should not have offline support.
                             cache.put(evt.request.url, fetchRes.clone());
                         }
                         limitCacheSize(dynamicCache, 24)
