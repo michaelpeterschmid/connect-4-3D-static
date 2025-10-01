@@ -12,9 +12,11 @@ let gameOver = false;
 let color;
 let yourTurn = true
 let enoughPlayersInQueue = false
+let last_played_position = []
 
 //sockets 
 const socket = io("https://connect43d-yfa5.onrender.com/");
+//const socket = io("http://localhost:3000/") //for local testing
 let room;
 
 joinRoomForm.addEventListener("submit", joinRoom);
@@ -123,7 +125,7 @@ async function play(cell){
   color = counter % 2 === 0 ? 'red' : 'green';
 
   const img = document.createElement('img');
-  img.src = `./img/cube_${color}.png`;
+  img.src = `./img/cube_${color}_last.png`;
 
   //show who's turn it is currently 
   let nextPlayer = counter % 2 === 0 ? 'green' : 'red';
@@ -132,8 +134,14 @@ async function play(cell){
   //update the gamefield
   img.alt = color;
   img.style.setProperty('--i', i);   // 0,1,2,...
+  img.id = `${x_y_pos[0]},${x_y_pos[1]},${i}`;
   cell.appendChild(img);
   gamefield[x_y_pos[0]][x_y_pos[1]].push(color)
+  last_played_position.push([img.id, `./img/cube_${color}.png`])
+  if(last_played_position.length>1){
+    let position = last_played_position.shift()
+    document.getElementById(position[0]).src = position[1];
+  }
 
   //send data to the server
   socket.emit("send-data", room, cell.id)
@@ -157,17 +165,21 @@ async function replicate(cell){
   color = counter % 2 === 0 ? 'red' : 'green';
 
   const img = document.createElement('img');
-  img.src = `./img/cube_${color}.png`;
+  img.src = `./img/cube_${color}_last.png`;
   //show who's turn it is currently 
   let nextPlayer = counter % 2 === 0 ? 'green' : 'red';
   document.getElementById("currentPlayer").src = `./img/cube_${nextPlayer}.png`;
   img.alt = color;
   img.style.setProperty('--i', i);   // 0,1,2,...
-
+  img.id = `${x_y_pos[0]},${x_y_pos[1]},${i}`;
   cell.appendChild(img);
-
   //update the gamefield
   gamefield[x_y_pos[0]][x_y_pos[1]].push(color)
+  last_played_position.push([img.id, `./img/cube_${color}.png`])
+  if(last_played_position.length>1){
+    let position = last_played_position.shift()
+    document.getElementById(position[0]).src = position[1];
+  }
 
   /* Draw first before  checking win*/
   await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
@@ -196,193 +208,223 @@ function hover(cell){
 }
 
 function checkwin(){
+    let playerlist = []
+    let playerpositionlist = []
     // Horizontale Überprüfung 3d
-    for(var i=0;i<gamefield.length;i++){  
-        for(var x=0; x<gamefield[i].length;x++){
-            var playerlist = [];
-            for(var y=0; y<gamefield[i][x].length;y++){
+    for(let i=0;i<gamefield.length;i++){  
+        for(let x=0; x<gamefield[i].length;x++){
+            playerlist = []
+            playerpositionlist = []
+            for(let y=0; y<gamefield[i][x].length;y++){
 
                 if(gamefield[i][x][y] == color){
-                    playerlist.push(color)       
+                    playerlist.push(color)   
+                    playerpositionlist.push(`${i},${x},${y}`)    
                 }
             }
-            if(checkPlayerlistLenght(playerlist)) return true;
+            if(checkPlayerlistLenght(playerlist, playerpositionlist)) return true;
         }
     }
 
     // horizontale Überprüfung 2d
-    for(var ebene = 0; ebene<4; ebene++){
-        for(var i=0; i<gamefield.length;i++){
-            var playerlist = [];
-            for(var x=0; x<gamefield[i].length; x++){
+    for(let ebene = 0; ebene<4; ebene++){
+        for(let i=0; i<gamefield.length;i++){
+            playerlist = [];
+            playerpositionlist = []
+            for(let x=0; x<gamefield[i].length; x++){
                 if(gamefield[i][x][ebene]==color){
                     playerlist.push(color)
+                    playerpositionlist.push(`${i},${x},${ebene}`) 
                 }
             }
-            if(checkPlayerlistLenght(playerlist)){
+            if(checkPlayerlistLenght(playerlist, playerpositionlist)){
                 return true
             }
         }
     }
 
     // vertikale Überprüfung 2d
-    for(var ebene = 0; ebene<4; ebene++){
-        for(var i=0; i<gamefield.length;i++){
-            var playerlist = [];
-            for(var x=0; x<gamefield[i].length; x++){
+    for(let ebene = 0; ebene<4; ebene++){
+        for(let i=0; i<gamefield.length;i++){
+            playerlist = [];
+            playerpositionlist = []
+            for(let x=0; x<gamefield[i].length; x++){
                 if(gamefield[x][i][ebene]==color){
                     playerlist.push(color)
+                    playerpositionlist.push(`${x},${i},${ebene}`) 
                 }
             }
-            if(checkPlayerlistLenght(playerlist)){
+            if(checkPlayerlistLenght(playerlist, playerpositionlist)){
                 return true
             }
         }
     }
 
     // Diagonale Überprüfung von links nach rechts 2d
-    for(var ebene = 0; ebene<4; ebene++){
-        var playerlist = []
-        for(var row=0; row<gamefield.length; row++){
-            var cell = row;         
+    for(let ebene = 0; ebene<4; ebene++){
+        playerpositionlist = []
+        playerlist = []
+        for(let row=0; row<gamefield.length; row++){
+            let cell = row;         
             if(gamefield[row][cell][ebene]==color){
                 playerlist.push(color)
+                playerpositionlist.push(`${row},${cell},${ebene}`) 
             }
-            if(checkPlayerlistLenght(playerlist)){
+            if(checkPlayerlistLenght(playerlist, playerpositionlist)){
                 return true
             }
         }
     }
     
     // Diagonale Überprüfung von rechts nach links 2d    
-    for(var ebene = 0; ebene<4; ebene++){
-        var playerlist = []       
-        for(var row=0, cell=3; row<gamefield.length; row++,cell--){
+    for(let ebene = 0; ebene<4; ebene++){
+        playerlist = []      
+        playerpositionlist = [] 
+        for(let row=0, cell=3; row<gamefield.length; row++,cell--){
             //alert(gamefield[row][cell][ebene])
             if(gamefield[row][cell][ebene]==color){
                 playerlist.push(color)
+                playerpositionlist.push(`${row},${cell},${ebene}`) 
             }
-            if(checkPlayerlistLenght(playerlist)){
+            if(checkPlayerlistLenght(playerlist, playerpositionlist)){
                 return true
             }
         }
     }
 
     // horizontale Überprüfung von links nach rechts 3d
-        for(var i=0; i<gamefield.length;i++){
-            var playerlist = [];
-            for(var x=0; x<gamefield[i].length; x++){
-                var ebene = x
+        for(let i=0; i<gamefield.length;i++){
+            playerlist = [];
+            playerpositionlist = []
+            for(let x=0; x<gamefield[i].length; x++){
+                let ebene = x
                 if(gamefield[i][x][ebene]==color){
                     playerlist.push(color)
+                    playerpositionlist.push(`${i},${x},${ebene}`) 
                 }
             }
-            if(checkPlayerlistLenght(playerlist)){
+            if(checkPlayerlistLenght(playerlist, playerpositionlist)){
                 return true
             }
         }
 
     // Horizontale Prüfung von rechts nach links 3d
-        for(var row=0; row<gamefield.length;row++){
-            var playerlist = [];
-            for(var cell=0; cell<gamefield[row].length; cell++){
-                var ebene = (3 - cell)
+        for(let row=0; row<gamefield.length;row++){
+            playerlist = [];
+            playerpositionlist = []
+            for(let cell=0; cell<gamefield[row].length; cell++){
+                let ebene = (3 - cell)
                 if(gamefield[row][cell][ebene]==color){
                     playerlist.push(color)
+                    playerpositionlist.push(`${row},${cell},${ebene}`) 
                 }
             }
-            if(checkPlayerlistLenght(playerlist)){
+            if(checkPlayerlistLenght(playerlist, playerpositionlist)){
                 return true
             }
         }
 
     // vertikale Überprüfung von oben nach unten 3d
-        for(var row=0; row<gamefield.length;row++){
-            var playerlist = [];
-            for(var cell=0; cell<gamefield[row].length; cell++){
-                var ebene = cell
+        for(let row=0; row<gamefield.length;row++){
+            playerlist = [];
+            playerpositionlist = []
+            for(let cell=0; cell<gamefield[row].length; cell++){
+                let ebene = cell
                 if(gamefield[cell][row][ebene]==color){
                     playerlist.push(color)
+                    playerpositionlist.push(`${cell},${row},${ebene}`) 
                 }
             }
-            if(checkPlayerlistLenght(playerlist)){
+            if(checkPlayerlistLenght(playerlist, playerpositionlist)){
                 return true
             }
         }
 
     // vertikale Überprüfung von unten nach oben 3d
-    for(var row=0; row<gamefield.length;row++){
-        var playerlist = [];
-        for(var cell=0; cell<gamefield[row].length; cell++){
-            var ebene = (3 - cell) 
+    for(let row=0; row<gamefield.length;row++){
+        playerlist = [];
+        playerpositionlist = []
+        for(let cell=0; cell<gamefield[row].length; cell++){
+            let ebene = (3 - cell) 
             if(gamefield[cell][row][ebene]==color){
                 playerlist.push(color)
+                playerpositionlist.push(`${cell},${row},${ebene}`) 
             }
         }
-        if(checkPlayerlistLenght(playerlist)){
+        if(checkPlayerlistLenght(playerlist, playerpositionlist)){
             return true
         }
     }
 
     // Diagonale Überprüfung von oben links nach unten rechts 3d
-        var playerlist = []
-        for(var row=0; row<gamefield.length; row++){
-            var cell = row;
-            var ebene = row  
+        playerlist = []
+        playerpositionlist = []
+        for(let row=0; row<gamefield.length; row++){
+            let cell = row;
+            let ebene = row  
             if(gamefield[row][cell][ebene]==color){
                 playerlist.push(color)
+                playerpositionlist.push(`${row},${cell},${ebene}`) 
             }
-            if(checkPlayerlistLenght(playerlist)){
+            if(checkPlayerlistLenght(playerlist, playerpositionlist)){
                 return true
             }
         }
 
     // Diagonale Überprüfung von unten rechts nach oben links 3d
-        var playerlist = []
-        for(var row=0; row<gamefield.length; row++){
-            var cell = row;
-            var ebene = 3-row
+        playerlist = []
+        playerpositionlist = []
+        for(let row=0; row<gamefield.length; row++){
+            let cell = row;
+            let ebene = 3-row
             if(gamefield[row][cell][ebene]==color){
                 playerlist.push(color)
+                playerpositionlist.push(`${row},${cell},${ebene}`) 
             }
-            if(checkPlayerlistLenght(playerlist)){
+            if(checkPlayerlistLenght(playerlist, playerpositionlist)){
                 return true
             }
         }
     // Diagonale Überprüfung von oben rechts nach unten links 3d
-    var playerlist = []
-        for(var row=0; row<gamefield.length; row++){
-            var cell = 3-row
-            var ebene = row
+        playerlist = []
+        playerpositionlist = []
+        for(let row=0; row<gamefield.length; row++){
+            let cell = 3-row
+            let ebene = row
             
             if(gamefield[row][cell][ebene]==color){
                 playerlist.push(color)
+                playerpositionlist.push(`${row},${cell},${ebene}`) 
             }
-            if(checkPlayerlistLenght(playerlist)){
+            if(checkPlayerlistLenght(playerlist, playerpositionlist)){
                 return true
             }
         }
 
     // Diagonale Überprüfung von unten links nach oben rechts 3d
-    var playerlist = []
-        for(var row=0; row<gamefield.length; row++){
-            var cell = 3-row
-            var ebene = 3-row
+        playerlist = []
+        playerpositionlist = []
+        for(let row=0; row<gamefield.length; row++){
+            let cell = 3-row
+            let ebene = 3-row
             
             if(gamefield[row][cell][ebene]==color){
                 playerlist.push(color)
+                playerpositionlist.push(`${row},${cell},${ebene}`) 
             }
 
-            if(checkPlayerlistLenght(playerlist)){
+            if(checkPlayerlistLenght(playerlist, playerpositionlist)){
                 return true
             }
         }
     return false;
 }
 
-function checkPlayerlistLenght(playerlist){
-    console.log(playerlist)
+function checkPlayerlistLenght(playerlist, playerpositionlist){
     if(playerlist.length==4){
+        for(let position of playerpositionlist){
+            document.getElementById(position).src = `./img/cube_${color}_win.png`; 
+        }
         return true
     }
 }
