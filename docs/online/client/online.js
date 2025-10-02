@@ -1,3 +1,33 @@
+// sounds
+// --- audio setup ---
+const sounds = {
+  place: new Audio('./sounds/put_block.mp3'),     
+  win: new Audio('./sounds/win.mp3'),
+  lose: new Audio('./sounds/lose.mp3')
+};
+
+// Preload & set levels
+Object.values(sounds).forEach(a => { a.preload = 'auto'; a.volume = 0.7; });
+
+// Some browsers (esp. iOS/Safari) need a user gesture before audio can play.
+// This "unlocks" audio on the first tap/click.
+window.addEventListener('pointerdown', () => {
+  Object.values(sounds).forEach(a => {
+    a.play().then(() => a.pause()).catch(() => {});
+    a.currentTime = 0;
+  });
+}, { once: true });
+
+// Helper: play without cutting off overlapping instances
+function playSnd(key) {
+  const base = sounds[key] || sounds.place;
+  // clone so rapid consecutive plays don’t interrupt each other
+  const inst = base.cloneNode(true);
+  inst.play().catch(() => {}); // ignore if blocked
+}
+
+
+//game logic
 const joinRoomForm = document.getElementById("joinRoomForm");
 const joinQueueBtn = document.getElementById("joinQueueBtn");
 const gameFieldDiv = document.getElementById("gamefield");
@@ -136,6 +166,7 @@ async function play(cell){
   img.style.setProperty('--i', i);   // 0,1,2,...
   img.id = `${x_y_pos[0]},${x_y_pos[1]},${i}`;
   cell.appendChild(img);
+  playSnd("place")
   gamefield[x_y_pos[0]][x_y_pos[1]].push(color)
   last_played_position.push([img.id, `./img/cube_${color}.png`])
   if(last_played_position.length>1){
@@ -150,7 +181,10 @@ async function play(cell){
   await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
   if(checkwin()){
-    alert(`${color} won the game!`)
+    playSnd("win")
+    setTimeout(() => {
+        alert(`${color} won the game!`)
+    }, 200)
     gameOver = true;
     return
   }
@@ -173,6 +207,7 @@ async function replicate(cell){
   img.style.setProperty('--i', i);   // 0,1,2,...
   img.id = `${x_y_pos[0]},${x_y_pos[1]},${i}`;
   cell.appendChild(img);
+  playSnd("place")
   //update the gamefield
   gamefield[x_y_pos[0]][x_y_pos[1]].push(color)
   last_played_position.push([img.id, `./img/cube_${color}.png`])
@@ -185,7 +220,10 @@ async function replicate(cell){
   await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
   
   if(checkwin()){
-    alert(`${color} won the game!`)
+    playSnd("lose")
+    setTimeout(() => {
+        alert(`${color} won the game!`)
+    }, 200)
     gameOver = true;
     return
   }
